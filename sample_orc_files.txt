@@ -1,0 +1,3 @@
+s3://example-bucket/data/file1.orc
+s3://example-bucket/data/file2.orc
+s3://example-bucket/data/nested/file3.orc
