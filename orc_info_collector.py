@@ -81,7 +81,7 @@ class S3ORCReader:
             raw_length = 0
             for idx in range(col_len):
                 col = Column(reader, idx + 1)
-                raw_length += col.get('total_length')
+                raw_length += col.statistics.get('total_length')
 
             return {
                 'file_length': file_length,
@@ -120,6 +120,7 @@ def get_orc_file_info(s3_path, s3_reader=None):
             'file_path': s3_path,
             'file_length': metadata['file_length'],
             'num_stripes': metadata['num_stripes'],
+            'raw_length': metadata['raw_length']
         }
     
     except Exception as e:
