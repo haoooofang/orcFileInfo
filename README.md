@@ -19,7 +19,6 @@ This tool efficiently collects information about ORC files stored on S3, includi
 - Required packages:
   - pyarrow
   - pandas
-  - boto3
 
 Install dependencies:
 ```

@@ -12,15 +12,14 @@ Usage:
 Where <input_file> contains a list of S3 paths to ORC files, one per line.
 """
 
-import sys
 import os
 import argparse
-import pyarrow.orc as orc
-import pyarrow.fs as fs
+from pyarrow import fs
 import pandas as pd
 from urllib.parse import urlparse
 import concurrent.futures
 import logging
+from pyorc import Reader, Column
 
 # Configure logging
 logging.basicConfig(
@@ -62,20 +61,32 @@ class S3ORCReader:
         
         try:
             # Get file info using PyArrow's filesystem interface
-            io_stream = self.s3_fs.open_input_file(s3_path)
+            in_stream = self.s3_fs.open_input_file(s3_path)
 
-            # Use PyArrow's ORC reader with the filesystem
-            reader = orc.ORCFile(io_stream)
+            # # Use PyArrow's ORC reader with the filesystem
+            # reader = orc.ORCFile(io_stream)
+            reader = Reader(in_stream)
             
             # Get number of stripes
-            num_stripes = reader.nstripes
-            
+            # num_stripes = reader.nstripes
+            num_stripes = reader.num_of_stripes
+
             # Get file length
-            file_length = reader.file_length
-            
+            # file_length = reader.file_length
+            file_length = reader.bytes_lengths.get('file_length')
+
+            schema = reader.schema
+            col_len = len(schema.fields)
+
+            raw_length = 0
+            for idx in range(col_len):
+                col = Column(reader, idx + 1)
+                raw_length += col.get('total_length')
+
             return {
                 'file_length': file_length,
                 'num_stripes': num_stripes,
+                'raw_length':  raw_length
             }
         
         except Exception as e:

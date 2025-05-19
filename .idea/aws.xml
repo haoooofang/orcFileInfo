@@ -2,6 +2,11 @@
 <project version="4">
   <component name="accountSettings">
     <option name="activeRegion" value="us-west-2" />
+    <option name="recentlyUsedProfiles">
+      <list>
+        <option value="profile:sso" />
+      </list>
+    </option>
     <option name="recentlyUsedRegions">
       <list>
         <option value="us-west-2" />
